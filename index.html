@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Processing Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="processing-js-1.6.6/processing.js"></script>
+      
+   <script src="processing.js"></script>
+   <script>
+     window.onload = function(){
+       var canvas = document.getElementsByTagName('canvas')[0];
+       var codeElm = document.getElementById('processing-code');
+       var code = codeElm.textContent || codeElm.innerText;
+
+       new Processing(canvas, code);
+     };
+   </script>
+   <script id="processing-code" type="application/processing">
+  
+class Blob{
+  PVector pos;
+  float r;
+  PVector vel;
+  int count;
+
+  Blob(float x, float y, float rr){
+    pos = new PVector(x, y);
+    vel = PVector.random2D();
+    vel.mult(random(5,15));
+    r = rr;
+  }
+
+  void update(){
+    
+  }
+  
+  void setPos(int x, int y){
+    pos.x = x; 
+    pos.y = y;
+  }
+
+  void show(){
+    noFill();
+    noStroke();
+    ellipse(pos.x, pos.y, r*2, r*2);
+  }
+}
+
+Blob[] blobs = new Blob[4];
+
+void setup(){
+    int hh = window.innerWidth * 0.8;
+    size(window.innerWidth, hh);
+    colorMode(RGB);
+    frameRate(25);
+
+    blobs[0] = new Blob(width*0.25, height*0.85, width*0.133);
+    blobs[1] = new Blob(width*0.125, height*0.6, width*0.1);
+    blobs[2] = new Blob(width*0.5, height*0.4, width*0.1);
+    blobs[3] = new Blob(width*0.875, height*0.6, width*0.1);
+
+}
+
+void draw(){
+    background(51);
+    int posx, posy;
+    posx = mouseX;
+    if(mouseY>width*0.133)posy = mouseY;
+    else posy = int(width*0.133);
+    blobs[0].setPos(posx, posy);
+    loadPixels();
+    for (int x = 0;x < width; x++) {
+      for(int y = 0; y  < height; y++){
+        //ピクセルは一元配列で管理されている
+        int index = x + y * width;
+
+        float sum = 0;
+        for(Blob b : blobs){
+          float d = dist(x, y, b.pos.x, b.pos.y);
+          sum += 80 * b.r / d;
+        }
+        float bb;
+        bb = 255;
+        if(sum<165)bb=0;
+        //165
+        pixels[index] = color(bb, bb, 255);
+      }
+    }
+    
+
+    updatePixels();
+    for(Blob b : blobs){
+      b.update();
+    b.show();
+    }
+  
+}
+   </script>
+</head>
+   
+<body bgcolor="#555">
+    <div id="wrapper">
+        <canvas id = "main"></canvas>
+    </div>
+<!--
+    <div id="button">
+        <p id="professor-button">P</p>
+        <p id="top-button">T</p>
+        <p id="works-button">W</p>
+    </div>
+-->
+    <script type="text/javascript">
+        function setPos(){
+            var 
+        }
+    
+    </script>
+</body>
+</html>
